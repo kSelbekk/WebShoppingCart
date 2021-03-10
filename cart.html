@@ -65,9 +65,12 @@
                     <th scope="col" class="border-0 bg-light">
                       <div class="py-2 text-uppercase">Remove</div>
                     </th>
+                    <th scope="col" class="border-0 bg-light">
+                      <div class="py-2 text-uppercase">Add</div>
+                    </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="cartBody">
                   <!--Product row start-->
                   <tr>
                     <th scope="row" class="border-0">
@@ -80,7 +83,12 @@
                     </th>
                     <td class="border-0 align-middle"><strong>$79.00</strong></td>
                     <td class="border-0 align-middle"><strong>3</strong></td>
-                    <td class="border-0 align-middle"><a href="#" class="text-dark"><i class=""></i></a></td>
+                    <td class="align-middle text-left">
+                      <button class="btn btn-danger">-</button>
+                    </td>
+                    <td class="align-middle text-left">
+                      <button class="btn ">+</button>
+                    </td>
                   </tr>
                   <!--Product row End-->
 

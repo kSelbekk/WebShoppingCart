@@ -32,8 +32,9 @@ body {
 
 }
 .btn:hover{
-    background-color: #17c743;
+    background-color: #66343A40;
 }
+
 footer{
     margin-top: 0.5rem;
     background-color: #66343A40;

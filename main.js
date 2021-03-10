@@ -5,7 +5,7 @@
 }*/
 
 //Function that loads all the products from fakestoreapi
-function load(callback){
+load = (callback)=>{
     const xhr = new XMLHttpRequest();
     xhr.open('GET', 'https://fakestoreapi.com/products');
     xhr.send();
@@ -13,7 +13,7 @@ function load(callback){
     xhr.onreadystatechange = function(){
         if(xhr.readyState === 4 && xhr.status === 200){
             let resp = JSON.parse(xhr.responseText);
-            render(resp)
+            renderShopInterface(resp);
             callback();
         }
     }
@@ -23,14 +23,13 @@ load(()=>{
   //listening for button click for the "add to cart" button
   collection.forEach(product => {
     product.addEventListener('click', ()=>{
-        //TODO!!! Add function for adding to localstorage
         console.log(product.id);
         addToCart(product.id);
     })
   });
 });
 
-function render(prod){
+renderShopInterface = (prod) =>{
     let output = ' <div class="row">';
     for (let key of prod) {
       output += `  
@@ -41,7 +40,7 @@ function render(prod){
             <h5 class="card-title">${key.title}</h5>
             <p class="card-text ">${key.description}</p>
             <p class="card-text">${key.price} :-</p>
-            <button href="#" class="btn btn-primary addToCartBtn" id="${key.id}" >Add to Cart</button>
+            <button href="#" class="btn addToCartBtn" id="${key.id}" >Add to Cart</button>
             </div>
         </div>
       </div>
@@ -52,10 +51,10 @@ function render(prod){
 }
 
 
-function addToCart(key){
-
+addToCart = (key)=>{
     if(localStorage.getItem("cartItems") === null){
         let cartProducts = [];
+        let product = [];
         cartProducts.push(key);
         localStorage.setItem("cartItems", JSON.stringify(cartProducts));
         return;
@@ -65,16 +64,37 @@ function addToCart(key){
     a.push(key);
     localStorage.setItem("cartItems", JSON.stringify(a));
 }
-removeFromCart = (product)=>{
 
-}
+//EJ KLAR
+renderCustomerCart = (prod)=>{
+  let cartItems = JSON.parse(localStorage.getItem("cartItems"));
+  let output = '';
 
-updateNumberOfProducts = (prodcut)=>{
-
-}
-
-function renderCustomerCart(){
-
+  if(list!== null){
+    list.forEach(i => {
+        output += `
+        <tr>
+          <th scope="row" class="border-0">
+            <div class="p-2">
+              <img src="https://res.cloudinary.com/mhmd/image/upload/v1556670479/product-1_zrifhn.jpg" alt="" width="70" class="img-fluid rounded shadow-sm">
+              <div class="ml-3 d-inline-block align-middle">
+                <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle">Timex Unisex Originals</a></h5><span class="text-muted  font-weight-normal font-italic d-block">Category: Watches</span>
+              </div>
+            </div>
+          </th>
+          <td class="border-0 align-middle"><strong>$79.00</strong></td>
+          <td class="border-0 align-middle"><strong>3</strong></td>
+          <td class="align-middle text-left">
+            <button class="btn btn-danger">-</button>
+          </td>
+          <td class="align-middle text-left">
+            <button class="btn ">+</button>
+          </td>
+        </tr>
+        `
+    });
+    document.querySelector('#cartBody').innerHTML = output;
+  }
 }
 
 
@@ -115,5 +135,12 @@ document.getElementById("myForm").addEventListener('submit', (e)=>{
 function submitCustomerForm(){
   console.log("asd");
   document.getElementById("myForm").submit();
+
+}
+removeFromCart = (product)=>{
+
+}
+
+updateNumberOfProducts = (prodcut)=>{
 
 }
