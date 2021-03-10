@@ -40,10 +40,15 @@ function render(prod){
 }
 
 //listening for button click for the "add to cart" button
-/*
-const btnAdd = document.querySelector('.addToCartBtn');
-console.log(btnAdd);
 
+const collection = document.getElementsByClassName('addToCartBtn');
+console.log(collection);
+
+for (let i = 0; i < collection.length; i++) {
+  console.log(collection[i]);
+}
+
+/*
 btnAdd.forEach(product => {
     product.addEventListener('click', ()=>{
         //TODO!!! Add function for adding to localstorage
@@ -51,6 +56,21 @@ btnAdd.forEach(product => {
     })
 });
 */
+
+function addToCart(){
+
+    if(localStorage.getItem("cartItems") === null){
+        let cartProducts = [];
+        cartProducts.push("Kevin");
+        localStorage.setItem("cartItems", JSON.stringify(names));
+        return;
+    }
+
+    let a = JSON.parse(localStorage.getItem("cartItems"));
+    a.push("kevin");
+    localStorage.setItem("cartItems", JSON.stringify(a));
+    console.log(localStorage.getItem("cartItems"));
+}
 removeFromCart = (product)=>{
 
 }
@@ -89,6 +109,7 @@ document.getElementById("myForm").addEventListener('submit', (e)=>{
 
   if(message.length > 0){
     errorMessage.innerHTML = message.join(',<br>');
+    e.preventDefault();
   }
   else {
     errorMessage.innerHTML = "";
