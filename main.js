@@ -4,8 +4,8 @@
     .then(json => console.log(json))
 }*/
 
-//IIFE function that loads all the products from fakestoreapi
-(function load(){
+//Function that loads all the products from fakestoreapi
+function load(callback){
     const xhr = new XMLHttpRequest();
     xhr.open('GET', 'https://fakestoreapi.com/products');
     xhr.send();
@@ -14,9 +14,21 @@
         if(xhr.readyState === 4 && xhr.status === 200){
             let resp = JSON.parse(xhr.responseText);
             render(resp)
+            callback();
         }
     }
-})()
+};
+load(()=>{
+  const collection = document.querySelectorAll('.addToCartBtn');
+  //listening for button click for the "add to cart" button
+  collection.forEach(product => {
+    product.addEventListener('click', ()=>{
+        //TODO!!! Add function for adding to localstorage
+        console.log(product.id);
+        addToCart(product.id);
+    })
+  });
+});
 
 function render(prod){
     let output = ' <div class="row">';
@@ -39,37 +51,19 @@ function render(prod){
     document.querySelector('#output').innerHTML = output;
 }
 
-//listening for button click for the "add to cart" button
 
-const collection = document.getElementsByClassName('addToCartBtn');
-console.log(collection);
-
-for (let i = 0; i < collection.length; i++) {
-  console.log(collection[i]);
-}
-
-/*
-btnAdd.forEach(product => {
-    product.addEventListener('click', ()=>{
-        //TODO!!! Add function for adding to localstorage
-        console.log(product.innerHTML);
-    })
-});
-*/
-
-function addToCart(){
+function addToCart(key){
 
     if(localStorage.getItem("cartItems") === null){
         let cartProducts = [];
-        cartProducts.push("Kevin");
-        localStorage.setItem("cartItems", JSON.stringify(names));
+        cartProducts.push(key);
+        localStorage.setItem("cartItems", JSON.stringify(cartProducts));
         return;
     }
 
     let a = JSON.parse(localStorage.getItem("cartItems"));
-    a.push("kevin");
+    a.push(key);
     localStorage.setItem("cartItems", JSON.stringify(a));
-    console.log(localStorage.getItem("cartItems"));
 }
 removeFromCart = (product)=>{
 
