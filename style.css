@@ -1,0 +1,43 @@
+*{
+    font-family: 'Raleway', sans-serif;
+
+}
+body {
+    background: #eecda3;
+    background: -webkit-linear-gradient(to right, #435560, #435560);
+    background: linear-gradient(to right, #435560, #c8c6a7);
+    min-height: 100vh;
+  }
+.container{
+    background-color: #343A40;
+    padding: 1rem;
+}
+.numberInput{
+    width: 3rem;
+    margin: 2px;
+}
+
+.card{
+    color: #e7e6e1;
+    background-color: #435560;
+    width: 12rem;
+    margin-top: 1rem;
+    
+}
+
+.btn{
+    color: #e7e6e1;
+    background-color: #c8c6a7;
+    border: none;
+
+}
+.btn:hover{
+    background-color: #17c743;
+}
+footer{
+    margin-top: 0.5rem;
+    background-color: #66343A40;
+    color: #e7e6e1;
+    padding: 0.2rem;
+    text-align: center;
+}
