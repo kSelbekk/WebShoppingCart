@@ -1,6 +1,30 @@
 let storeProducts = [];
 
+loadData =(callback) => {
+    const url = 'https://fakestoreapi.com/products';
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function()
+    {
+        if (xhr.readyState == 4 && xhr.status == 200)
+        {
+            callback(JSON.parse(xhr.responseText));
+        }
+    }; 
+    xhr.open('GET', url);
+    xhr.send();
+}
+loadData(renderShopInterface);
+loadData(getProdArray);
+
+function getProdArray(arr){
+  for (let i = 0; i < arr.length; i++) {
+    storeProducts.push(arr[i]);
+  }
+}
+
+
 //Function that loads all the products from fakestoreapi
+/*
 load = (callback)=>{
   const url = 'https://fakestoreapi.com/products';
   const xhr = new XMLHttpRequest();
@@ -17,8 +41,8 @@ load = (callback)=>{
         }
     }  
 }
-
-load(()=>{
+*/
+function load(){
   const collection = document.querySelectorAll('.addToCartBtn');
   //listening for button click for the "add to cart" button
   collection.forEach(product => {
@@ -26,9 +50,9 @@ load(()=>{
         addToCart(product.id);
     })
   });
-})
+}
 
-renderShopInterface = (prod) =>{
+function renderShopInterface (prod){
     let output = ' <div class="row">';
     for (let key of prod) {
       output += `  
@@ -47,6 +71,7 @@ renderShopInterface = (prod) =>{
     }
     output += '</div>';
     document.querySelector('#output').innerHTML = output;
+    load();
 }
 
 addToCart = (key)=>{
@@ -66,21 +91,20 @@ addToCart = (key)=>{
       product.price = item.price;
       product.image = item.image;
     }
-    
   });
 
-  if(localStorage.getItem("cartItems") === null){
+  if(localStorage.getItem("cartItems") == null){
       let cartProducts = [];
       cartProducts.push(product);
       localStorage.setItem("cartItems", JSON.stringify(cartProducts));
       return;
   }
-  let prod = JSON.parse(localStorage.getItem("cartItems"));
-  prod.push(product);
-  localStorage.setItem("cartItems", JSON.stringify(prod));
+  let arrayOfProductFromLocalStorage = JSON.parse(localStorage.getItem("cartItems"));
+  arrayOfProductFromLocalStorage.push(product);
+  localStorage.setItem("cartItems", JSON.stringify(arrayOfProductFromLocalStorage));
   
 }
-//EJ KLAR
+
 renderCustomerCart = ()=>{
   let cartItems = JSON.parse(localStorage.getItem("cartItems"));
   let output = '';
@@ -99,10 +123,10 @@ renderCustomerCart = ()=>{
           <td class="border-0 align-middle"><strong>${prod.price} kr</strong></td>
           <td class="border-0 align-middle"><strong>0</strong></td>
           <td class="align-middle text-left">
-            <button class="btn btn-danger">-</button>
+            <button class="btn btn-danger" id="minus" value="${prod.id}">-</button>
           </td>
           <td class="align-middle text-left">
-            <button class="btn ">+</button>
+            <button class="btn" id="plus" value="${prod.id}">+</button>
           </td>
         </tr>
         `
@@ -113,6 +137,18 @@ renderCustomerCart = ()=>{
     localStorage.clear();
     window.location.reload();
   });
+
+  let plus = document.querySelector('#plus');
+  plus.addEventListener('click', ()=>{
+    alert(plus.value);
+    addToCart(plus.value);
+  })
+
+  let minus = document.querySelector('#minus');
+  minus.addEventListener('click', ()=>{
+    alert(minus.value);
+    localStorage.removeItem(minus.value);
+  })
 }
 renderCustomerCart();
 
