@@ -84,7 +84,6 @@ addToCart = (key)=>{
 renderCustomerCart = ()=>{
   let cartItems = JSON.parse(localStorage.getItem("cartItems"));
   let output = '';
-
   if(cartItems!= null){
     cartItems.forEach(prod => {
         output += `
@@ -93,12 +92,12 @@ renderCustomerCart = ()=>{
             <div class="p-2">
               <img src="${prod.image}" alt="" width="70" class="img-fluid rounded shadow-sm">
               <div class="ml-3 d-inline-block align-middle">
-                <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle">Timex Unisex Originals</a></h5><span class="text-muted  font-weight-normal font-italic d-block">Category: Watches</span>
+                <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle">${prod.title}</a></h5>
               </div>
             </div>
           </th>
-          <td class="border-0 align-middle"><strong>$79.00</strong></td>
-          <td class="border-0 align-middle"><strong>3</strong></td>
+          <td class="border-0 align-middle"><strong>${prod.price} kr</strong></td>
+          <td class="border-0 align-middle"><strong>0</strong></td>
           <td class="align-middle text-left">
             <button class="btn btn-danger">-</button>
           </td>
@@ -110,6 +109,10 @@ renderCustomerCart = ()=>{
     });
     document.querySelector('#cartBody').innerHTML = output;
   }
+  document.querySelector('#removeAll').addEventListener('click',function(){
+    localStorage.clear();
+    window.location.reload();
+  });
 }
 renderCustomerCart();
 
