@@ -74,7 +74,7 @@ function renderShopInterface (prod){
     load();
 }
 
-addToCart = (key)=>{
+function addToCart(key){
   let product = {
     id: "",
     title : "",
@@ -97,15 +97,30 @@ addToCart = (key)=>{
       let cartProducts = [];
       cartProducts.push(product);
       localStorage.setItem("cartItems", JSON.stringify(cartProducts));
-      return;
-  }
-  let arrayOfProductFromLocalStorage = JSON.parse(localStorage.getItem("cartItems"));
-  arrayOfProductFromLocalStorage.push(product);
-  localStorage.setItem("cartItems", JSON.stringify(arrayOfProductFromLocalStorage));
-  
+    } else{
+    let arrayOfProductFromLocalStorage = JSON.parse(localStorage.getItem("cartItems"));
+
+    for (let i = 0; i < arrayOfProductFromLocalStorage.length; i++) {
+      if(arrayOfProductFromLocalStorage[i].id == product.id || arrayOfProductFromLocalStorage[i].id == undefined){
+        let multiProducts = [];
+        multiProducts.push(product);
+          multiProducts.push(arrayOfProductFromLocalStorage[i]);
+          arrayOfProductFromLocalStorage.splice(arrayOfProductFromLocalStorage[i], 1);
+          arrayOfProductFromLocalStorage.push(multiProducts);
+          localStorage.setItem("cartItems", JSON.stringify(arrayOfProductFromLocalStorage));
+          alert(1);
+      } else{ 
+        arrayOfProductFromLocalStorage.push(product);
+        localStorage.setItem("cartItems", JSON.stringify(arrayOfProductFromLocalStorage));
+      };
+    }
+    };
 }
 
-renderCustomerCart = ()=>{
+
+renderCustomerCart();
+
+function renderCustomerCart(){
   let cartItems = JSON.parse(localStorage.getItem("cartItems"));
   let output = '';
   if(cartItems!= null){
@@ -138,19 +153,22 @@ renderCustomerCart = ()=>{
     window.location.reload();
   });
 
-  let plus = document.querySelector('#plus');
-  plus.addEventListener('click', ()=>{
-    alert(plus.value);
-    addToCart(plus.value);
-  })
-
-  let minus = document.querySelector('#minus');
-  minus.addEventListener('click', ()=>{
-    alert(minus.value);
-    localStorage.removeItem(minus.value);
-  })
+  let minus = document.querySelectorAll('#minus');
+  minus.forEach(btns => {
+    btns.addEventListener('click', ()=>{
+      alert(btns.value);
+      localStorage.removeItem(btns.value);
+    })
+  });
+  
 }
-renderCustomerCart();
+
+let plusProduct = document.querySelectorAll('#plus');
+  plusProduct.forEach(btns => {
+    btns.addEventListener('click', ()=>{
+      addToCart(btns.value);
+    })
+  });
 
 document.getElementById("myForm").addEventListener('submit', (e)=>{
   //Gets the information about the customers shipping 
