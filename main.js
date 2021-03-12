@@ -156,7 +156,7 @@ function renderCustomerCart(){
     });
   });
   let total = `
-                <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Subtotal </strong><strong>$${price}</strong></li>
+                <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Subtotal </strong><strong>$${price.toFixed(2)}</strong></li>
                 <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Shipping and handling</strong><strong>$10</strong></li>
                 <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
                   <h5 class="font-weight-bold">$${(price + 10).toFixed(2)}</h5>
@@ -187,30 +187,44 @@ function renderCustomerCart(){
     if (customerPhoneNumber.value === "" || customerPhoneNumber.value == null) {
       message.push("You must fill in your phone number");
     }
-  
     if(message.length > 0){
       errorMessage.innerHTML = message.join(',<br>');
       e.preventDefault();
     }else {
       errorMessage.innerHTML = "";
-      submitCustomerForm();
+      renderCheckout();
     }
   })
 }
 
-
-
-
-
-function submitCustomerForm(){
-  console.log("asd");
-  document.getElementById("myForm").submit();
-
-}
-removeFromCart = (product)=>{
-
-}
-
-updateNumberOfProducts = (prodcut)=>{
-
+function renderCheckout(e){
+  let cartItems = JSON.parse(localStorage.getItem("cartItems"));
+  let output = '<tbody>';
+  if(cartItems!= null){
+    cartItems.forEach(prod => {
+      let amount = prod.length;
+        output += `
+        <tr>
+          <th scope="row" class="border-0">
+            <div class="p-2">
+              <img src="${prod[0].image}" alt="product image" width="70" class="img-fluid rounded shadow-sm">
+              <div class="ml-3 d-inline-block align-middle">
+                <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle">${prod[0].title}</a></h5>
+              </div>
+            </div>
+          </th>
+          <td class="border-0 align-middle"><strong>$${prod[0].price}</strong></td>
+          <td class="border-0 align-middle"><strong>${amount}</strong></td>
+          <td class="align-middle text-left">
+            <button class="btn btn-danger" id="minus" value="${prod[0].id}">-</button>
+          </td>
+          <td class="align-middle text-left">
+            <button class="btn" id="plus" value="${prod[0].id}">+</button>
+          </td>
+        </tr>
+        `
+        output += '</tbody>'
+    });
+    document.querySelector('#checkout').innerHTML = output;
+  }
 }
