@@ -1,6 +1,6 @@
 let storeProducts = [];
 
-//Function that loads all the products from fakestoreapi
+//Function that loads all the products from fakestoreapi with a callbakc 
 function loadData(callback){
     const url = 'https://fakestoreapi.com/products';
     var xhr = new XMLHttpRequest();
@@ -53,6 +53,7 @@ function renderShopInterface (prod){
     getAddBtns();
 }
 
+//The function for adding a product
 function addToCart(key){
   let product = {
     id: "",
@@ -62,6 +63,7 @@ function addToCart(key){
     image: ""
   };
 
+  //If the product exist it creates a new product that gets added in the cart 
   storeProducts.forEach(item => {
     if(key == item.id){
       product.id = item.id;
@@ -76,20 +78,20 @@ function addToCart(key){
   let cartProducts = [];
   let theLooopExiter = true;
 
-  if(localStorage.getItem("cartItems") == null){
+  if(localStorage.getItem("cartItems") == null){ //Creats a localstorage with key if there is none
       multiProducts.push(product);
       cartProducts.push(multiProducts);
-      localStorage.setItem("cartItems", JSON.stringify(cartProducts));
+      localStorage.setItem("cartItems", JSON.stringify(cartProducts)); //Pushes the product in to an array and sets the localstorage
     } else{  
     let arrayOfProductFromLocalStorage = JSON.parse(localStorage.getItem("cartItems"));
 
-    arrayOfProductFromLocalStorage.forEach(arr => {
+    arrayOfProductFromLocalStorage.forEach(arr => { //Checks if there is any product with the same id, if so it pushes the same product into the same array
       if(arr[0].id == product.id){
         arr.push(product);
         theLooopExiter = false;
       }
     });
-    if(theLooopExiter){
+    if(theLooopExiter){ //Else it creates a new array
       multiProducts.push(product);
       arrayOfProductFromLocalStorage.push(multiProducts);
     }
@@ -100,11 +102,12 @@ function addToCart(key){
 
 renderCustomerCart();
 
+//Function that renders the shopping cart
 function renderCustomerCart(){
-  let cartItems = JSON.parse(localStorage.getItem("cartItems"));
+  let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
   let output = '';
   if(cartItems!= null){
-    cartItems.forEach(prod => {
+    cartItems.forEach(prod => { //Gets the localstorage parsed array and loops through it to get all the products 
       let amount = prod.length;
         output += `
         <tr>
@@ -134,22 +137,23 @@ function renderCustomerCart(){
     localStorage.clear();
     window.location.reload();
   });
-
+  //Function for deleting products in cart
   let minus = document.querySelectorAll('#minus');
   minus.forEach(btns => {
-    btns.addEventListener('click', ()=>{  
+    btns.addEventListener('click', ()=>{ //The function loops over the buttons and checks wich one has been clicked
         cartItems.forEach(arr => {
           let index = arr.length -1;
           if(btns.value == arr[index].id){
-            alert("inne i loop");
             for (let i = 0; i < arr.length; i++) {
               arr.pop();
+              if(arr.length == 0){
+                cartItems.splice(arr,1);
+              }
               break;
             }
-            if(arr.length == 0){
-              
-            }
+            
           }
+          //When the value is found it pops it from the array and sets the localstorage 
           localStorage.setItem("cartItems", JSON.stringify(cartItems));
         });
     })
@@ -158,7 +162,6 @@ function renderCustomerCart(){
   let plusProduct = document.querySelectorAll('#plus');
   plusProduct.forEach(btns => {
     btns.addEventListener('click', ()=>{
-      alert("asdasdffgdhfjgjkghlifjgh")
       addToCart(btns.value);
     })
   });
