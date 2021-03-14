@@ -147,12 +147,13 @@ function renderCustomerCart(){
             for (let i = 0; i < arr.length; i++) {
               arr.pop();
               if(arr.length == 0){
-                cartItems.splice(arr,1);
-              }
+                cartItems.splice(cartItems.indexOf(arr),1);
+              } 
               break;
             }
             
           }
+          
           //When the value is found it pops it from the array and sets the localstorage 
           localStorage.setItem("cartItems", JSON.stringify(cartItems));
         });
