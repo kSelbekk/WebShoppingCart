@@ -17,13 +17,14 @@ let shopBody = document.querySelector('#output');
 loadData(renderShopInterface);
 loadData(getProdArray);
 
+//Gets a array of products from the api
 function getProdArray(arr){
   for (let i = 0; i < arr.length; i++) {
     storeProducts.push(arr[i]);
   }
 }
 
-function getAddBtns(){
+function getAddBtns(){ 
   const collection = document.querySelectorAll('.addToCartBtn');
   collection.forEach(product => {
     product.addEventListener('click', ()=>{  //listening for button click for the "add to cart" button
@@ -32,7 +33,7 @@ function getAddBtns(){
   });
 }
 
-function renderShopInterface (prod){
+function renderShopInterface (prod){//Will render the shop interface with the products from api
     let output = ' <div class="row">';
     for (let key of prod) {
       output += `  
@@ -50,7 +51,7 @@ function renderShopInterface (prod){
       `;
     }
     output += '</div>';
-    document.querySelector('#output').innerHTML = output;
+    document.querySelector('#output').innerHTML = output; //Outputs it in a div in the html
     getAddBtns();
 }
 
@@ -214,12 +215,13 @@ function totalPrice(){
   `;
   }
   let price = 0;
-  cartItems.forEach(p => { //Simple calculation for the the totalprice of localstorage
+  cartItems.forEach(p => { //Simple calculation for the the totalprice of localstorage 
       p.forEach(element => {
       price += element.price;
     });
   });
-  return total = `
+  //If localstorage is not empty it will return this 
+  return total = ` 
                 <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
                   <h5 class="font-weight-bold">$${price}</h5>
                 </li>
