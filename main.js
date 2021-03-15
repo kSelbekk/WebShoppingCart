@@ -12,6 +12,8 @@ function loadData(callback){
     xhr.open('GET', url);
     xhr.send();
 }
+let shopBody = document.querySelector('#output');
+
 loadData(renderShopInterface);
 loadData(getProdArray);
 
@@ -23,9 +25,8 @@ function getProdArray(arr){
 
 function getAddBtns(){
   const collection = document.querySelectorAll('.addToCartBtn');
-  //listening for button click for the "add to cart" button
   collection.forEach(product => {
-    product.addEventListener('click', ()=>{
+    product.addEventListener('click', ()=>{  //listening for button click for the "add to cart" button
         addToCart(product.id);
     })
   });
@@ -91,7 +92,7 @@ function addToCart(key){
         theLooopExiter = false;
       }
     });
-    if(theLooopExiter){ //Else it creates a new array
+    if(theLooopExiter){ //Else it creates a new array and sets the value in localstorage
       multiProducts.push(product);
       arrayOfProductFromLocalStorage.push(multiProducts);
     }
@@ -99,12 +100,14 @@ function addToCart(key){
     };
 }
 
-
-renderCustomerCart();
+let shoppingCartBody = document.querySelector('#cartBody');
+if(shoppingCartBody){
+  renderCustomerCart();
+} 
 
 //Function that renders the shopping cart
 function renderCustomerCart(){
-  let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+  let cartItems = JSON.parse(localStorage.getItem("cartItems"));
   let output = '';
   if(cartItems!= null){
     cartItems.forEach(prod => { //Gets the localstorage parsed array and loops through it to get all the products 
@@ -151,9 +154,7 @@ function renderCustomerCart(){
               } 
               break;
             }
-            
           }
-          
           //When the value is found it pops it from the array and sets the localstorage 
           localStorage.setItem("cartItems", JSON.stringify(cartItems));
         });
@@ -166,20 +167,8 @@ function renderCustomerCart(){
       addToCart(btns.value);
     })
   });
-
-  let price = 0;
-  cartItems.forEach(p => {
-      p.forEach(element => {
-      price += element.price;
-    });
-  });
-  let total = `
-                <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
-                  <h5 class="font-weight-bold">$${price}</h5>
-                </li>
-  `;
-
-  document.querySelector('#subTotal').innerHTML = total;
+  
+  document.querySelector('#subTotal').innerHTML = totalPrice();
 
   document.getElementById("myForm").addEventListener('submit', (e)=>{
     //Gets the information about the customers shipping 
@@ -203,46 +192,68 @@ function renderCustomerCart(){
     if (customerPhoneNumber.value === "" || customerPhoneNumber.value == null) {
       message.push("You must fill in your phone number");
     }
-    if(message.length > 0){
+    if (cartItems <= 0) {
+      message.push("You have no products in your cart");
+    }
+    if(message.length > 0 || cartItems < 0){
       errorMessage.innerHTML = message.join(',<br>');
       e.preventDefault();
     }else {
       errorMessage.innerHTML = "";
-      renderCheckout();
     }
   })
+}
 
-  function renderCheckout(e){
-    let cartItems = JSON.parse(localStorage.getItem("cartItems"));
-    let output = '<tbody>';
-    if(cartItems!= null){
-      cartItems.forEach(prod => {
-        let amount = prod.length;
-          output += `
-          <tr>
-            <th scope="row" class="border-0">
-              <div class="p-2">
-                <img src="${prod[0].image}" alt="product image" width="70" class="img-fluid rounded shadow-sm">
-                <div class="ml-3 d-inline-block align-middle">
-                  <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle">${prod[0].title}</a></h5>
-                </div>
-              </div>
-            </th>
-            <td class="border-0 align-middle"><strong>$${prod[0].price}</strong></td>
-            <td class="border-0 align-middle"><strong>${amount}</strong></td>
-            <td class="align-middle text-left">
-              <button class="btn btn-danger" id="minus" value="${prod[0].id}">-</button>
-            </td>
-            <td class="align-middle text-left">
-              <button class="btn" id="plus" value="${prod[0].id}">+</button>
-            </td>
-          </tr>
-          `
-          output += '</tbody>'
-      });
-      document.querySelector('#checkout').innerHTML = output;
-      e.preventDefault();
-    }
+function totalPrice(){
+  let cartItems = JSON.parse(localStorage.getItem("cartItems"));
+  if(!cartItems > 0){
+    return `
+      <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
+        <h5 class="font-weight-bold">$${0}</h5>
+      </li>
+  `;
   }
+  let price = 0;
+  cartItems.forEach(p => { //Simple calculation for the the totalprice of localstorage
+      p.forEach(element => {
+      price += element.price;
+    });
+  });
+  return total = `
+                <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
+                  <h5 class="font-weight-bold">$${price}</h5>
+                </li>
+  `;
+};
+
+let confirmationBody = document.querySelector('#checkoutRender');
+if(confirmationBody){
+  renderCheckout();
+};
+function renderCheckout(){
+  let cartItems = JSON.parse(localStorage.getItem("cartItems"));
+  let output = '';
+  if(cartItems!= null){
+    cartItems.forEach(prod => { //Gets the localstorage parsed array and loops through it to get all the products 
+      let quant = prod.length;
+        output += `
+        <tr>
+          <th scope="row" class="border-0">
+            <div class="p-2">
+              <img src="${prod[0].image}" alt="product image" width="70" class="img-fluid rounded shadow-sm">
+              <div class="ml-3 d-inline-block align-middle">
+                <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle">${prod[0].title}</a></h5>
+              </div>
+            </div>
+          </th>
+          <td class="border-0 align-middle"><strong>$${prod[0].price}</strong><br></td>
+          <td class="border-0 align-middle"><strong>Quantity: ${quant}</strong></td>
+        </tr>
+        `
+    });
+    document.querySelector('#checkoutRender').innerHTML = output;
+    document.querySelector('#subTotal').innerHTML = totalPrice();
+    localStorage.clear();
+  };
 }
 

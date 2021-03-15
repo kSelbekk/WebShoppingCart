@@ -76,11 +76,13 @@
               </table>
             </div>
             <button class="btn" id="removeAll">Empty cart</button>
+            <div id="noProducts" class="text-danger"></div>
+
             <!--Shopping cart table End -->
           </div>
         </div>
 
-        <form id="myForm" method="GET">
+        <form id="myForm" method="GET" action="confirmation.html">
           <div class="row py-5 p-4 bg-white rounded shadow-sm">
             <div class="col-lg-6">
               <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold text-center">Customer Information</div>
@@ -108,12 +110,10 @@
               <!--Render the total cost-->
               <ul class="list-unstyled mb-4" id="subTotal"></ul>
               <!--End-->
-              <button type="submit" class="btn btn-dark rounded-pill py-2 btn-block" >Procceed to checkout</button>
+              <button type="submit" class="btn btn-dark rounded-pill py-2 btn-block">Procceed to checkout</button>
             </div>
           </div>
         </form>
-        <div id="checkout"></div>
-
       </div>  
       </div>
     </div>
